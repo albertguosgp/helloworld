@@ -11,6 +11,8 @@
 
     <properties>
         <spring.boot.version>1.2.5.RELEASE</spring.boot.version>
+        <quartz.version>2.2.1</quartz.version>
+        <togglz.version>2.2.0.Final</togglz.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
@@ -44,6 +46,10 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jolokia</groupId>
+            <artifactId>jolokia-core</artifactId>
+        </dependency>
 
         <!-- start database dependencies -->
         <dependency>
@@ -60,6 +66,21 @@
             <artifactId>postgresql</artifactId>
             <version>8.4-702.jdbc4</version>
         </dependency>
+
+        <!-- feature toggle -->
+        <dependency>
+            <groupId>org.togglz</groupId>
+            <artifactId>togglz-console</artifactId>
+            <version>${togglz.version}</version>
+        </dependency>
+
+        <!-- start scheduler -->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>${quartz.version}</version>
+        </dependency>
+
         <!-- start code helper dependencies -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -71,7 +92,12 @@
             <artifactId>commons-csv</artifactId>
             <version>1.2</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+        
         <!-- start test dependencies -->
         <dependency>
             <groupId>junit</groupId>
@@ -96,10 +122,20 @@
             <version>1.2.4</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.icegreen</groupId>
+            <artifactId>greenmail-spring</artifactId>
+            <version>1.4.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

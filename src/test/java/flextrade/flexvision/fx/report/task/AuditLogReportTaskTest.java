@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.mail.MailSender;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -24,6 +23,7 @@ import java.util.stream.Collectors;
 import flextrade.flexvision.fx.audit.json.AuditLogQuery;
 import flextrade.flexvision.fx.audit.pojo.AuditLog;
 import flextrade.flexvision.fx.audit.service.AuditLogService;
+import flextrade.flexvision.fx.base.service.MailService;
 
 import static flextrade.flexvision.fx.audit.pojo.AuditLog.of;
 import static flextrade.flexvision.fx.report.task.AuditLogReportTask.FILE_HEADER_MAPPING;
@@ -40,7 +40,7 @@ public class AuditLogReportTaskTest {
     AuditLogQuery auditLogQuery;
 
     @Mock
-    MailSender mailSender;
+    MailService mailService;
 
     private List<AuditLog> auditLogs;
 
@@ -65,7 +65,7 @@ public class AuditLogReportTaskTest {
 
     @Test
     public void should_create_temp_audit_log_csv() throws Exception {
-        AuditLogReportTask auditLogReportTask = new AuditLogReportTask(auditLogQuery, auditLogService, mailSender);
+        AuditLogReportTask auditLogReportTask = new AuditLogReportTask(auditLogQuery, auditLogService, mailService);
         tempCsvFile = auditLogReportTask.call();
         List<AuditLog> actualAuditFromCsv = readAuditLogsFromCsv(tempCsvFile);
 
@@ -91,7 +91,7 @@ public class AuditLogReportTaskTest {
             ZonedDateTime auditDate = ZonedDateTime.parse(csvRecord.get(FILE_HEADER_MAPPING[3]));
             String remarks = csvRecord.get(FILE_HEADER_MAPPING[4]);
 
-            return AuditLog.of(id, maxxUser, operation, Date.from(auditDate.toInstant()), remarks);
+            return of(id, maxxUser, operation, Date.from(auditDate.toInstant()), remarks);
         }).collect(Collectors.toList());
     }
 }

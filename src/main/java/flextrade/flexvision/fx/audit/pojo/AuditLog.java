@@ -40,6 +40,7 @@ public class AuditLog implements Serializable {
     @Type(type = "timestamp")
     private Date auditDate;
 
+    @NotNull
     @Size(min = 1, max = 128)
     @Column(name = "remarks")
     private String remarks;

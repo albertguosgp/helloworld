@@ -1,18 +1,31 @@
 package flextrade.flexvision.fx.config;
 
+import com.icegreen.greenmail.spring.GreenMailBean;
+
 import org.flywaydb.core.Flyway;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 import javax.sql.DataSource;
+
+import flextrade.flexvision.fx.base.feature.FeatureService;
+import flextrade.flexvision.fx.base.feature.impl.CachedFeatureServiceImpl;
 
 @Configuration
 public class IntegrationTestAppConfig {
 
-    /**
-     * With profile integration-test, flyway will clean and migrate database.
-     */
-    @Bean
+    @Value("${spring.mail.host: localhost}")
+    private String smtpHost;
+
+    @Value("${spring.mail.port: 25}")
+    private int smtpPort;
+
+    @Value("${spring.mail.default-encoding: UTF-8}")
+    private String defaultEmailEncoding;
+
+    @Bean(name = "flyway")
     public Flyway flyway(DataSource dataSource) {
         Flyway flyway = new Flyway();
         flyway.setDataSource(dataSource);
@@ -21,5 +34,18 @@ public class IntegrationTestAppConfig {
         flyway.migrate();
 
         return flyway;
+    }
+
+    @Bean
+    @DependsOn(value = {"flyway"})
+    public FeatureService createFeatureService() {
+        return new CachedFeatureServiceImpl();
+    }
+
+    @Bean
+    public GreenMailBean greenMail() {
+        GreenMailBean greenMail = new GreenMailBean();
+
+        return greenMail;
     }
 }

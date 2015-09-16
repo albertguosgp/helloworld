@@ -1,8 +1,10 @@
 package flextrade.flexvision.fx.audit.dao.impl;
 
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Conjunction;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -13,9 +15,11 @@ import flextrade.flexvision.fx.audit.dao.AuditLogDao;
 import flextrade.flexvision.fx.audit.json.AuditLogQuery;
 import flextrade.flexvision.fx.audit.pojo.AuditLog;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 
 import static flextrade.flexvision.fx.utils.CollectionUtils.toNotNullList;
 import static org.springframework.util.StringUtils.isEmpty;
+import static org.springframework.util.StringUtils.trimWhitespace;
 
 @Repository
 @Slf4j
@@ -28,6 +32,14 @@ public class AuditLogDaoImpl implements AuditLogDao {
         log.debug("Saving audit log {}", auditLog);
         Long identifier = (Long) sessionFactory.getCurrentSession().save(auditLog);
         auditLog.setId(identifier);
+    }
+
+    @Override
+    public void delete(Long id) {
+        log.debug("Removing audit log by id {}", id);
+        Session session = sessionFactory.getCurrentSession();
+        AuditLog auditLogToBeDeleted = (AuditLog) session.load(AuditLog.class, id);
+        session.delete(auditLogToBeDeleted);
     }
 
     @Override
@@ -44,7 +56,7 @@ public class AuditLogDaoImpl implements AuditLogDao {
         Criteria criteria = createCriteria();
         Conjunction conjunction = Restrictions.conjunction();
         if (!isEmpty(auditLogQuery.getMaxxUser())) {
-            conjunction.add(Restrictions.like("maxxUser", auditLogQuery.getMaxxUser()));
+            conjunction.add(Restrictions.ilike("maxxUser", trimWhitespace(auditLogQuery.getMaxxUser()), MatchMode.ANYWHERE));
         }
         if (auditLogQuery.getStartDate() != null) {
             conjunction.add(Restrictions.gt("auditDate", auditLogQuery.getStartDate()));

@@ -2,6 +2,8 @@ package flextrade.flexvision.fx.base.service.impl;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -40,5 +42,10 @@ public class FreezableTimeServiceImpl implements FreezableTimeService {
     @Override
     public ZonedDateTime now() {
         return now == null ? ZonedDateTime.now() : now;
+    }
+
+    @Override
+    public LocalDate valueDate() {
+        return now().withZoneSameInstant(ZoneId.of("America/New_York")).toLocalDate();
     }
 }

@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -22,12 +23,13 @@ import cucumber.api.java.en.When;
 import flextrade.flexvision.fx.audit.pojo.AuditLog;
 import flextrade.flexvision.fx.audit.service.AuditLogService;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @WebIntegrationTest
 public class AuditLogStepDefs extends AbstractSteps {
-    public static final String AUDIT_LOG_URL = "/auditlog";
 
     private AuditLog auditLog;
 
@@ -43,6 +45,7 @@ public class AuditLogStepDefs extends AbstractSteps {
 
     private RestTemplate restTemplate = new TestRestTemplate();
 
+
     @Given("^maxx user is \"([^\"]*)\", operation is \"([^\"]*)\", audit time is at \"([^\"]*)\", and remark is \"([^\"]*)\"$")
     public void maxx_user_is_operation_is_audit_time_is_at_and_remark_is(String maxxUser, String operation, String auditDate, String remarks) throws Throwable {
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
@@ -51,22 +54,6 @@ public class AuditLogStepDefs extends AbstractSteps {
         auditLog.setOperation(operation);
         auditLog.setRemarks(remarks);
         auditLog.setAuditDate(dateFormatter.parse(auditDate));
-    }
-
-    @Then("^the client receives status code of (\\d+)$")
-    public void the_client_receives_status_code_of(int httpStatusCode) throws Throwable {
-        assertThat(httpStatusCode, Matchers.is(httpPostResponse.getStatusCode().value()));
-    }
-
-    @When("^the client call Maxx restful service to get audit log with Maxx user \"([^\"]*)\", start date \"([^\"]*)\", end date \"([^\"]*)\"$")
-    public void the_client_call_Maxx_restful_service_to_get_audit_log_with_Maxx_user_start_date_end_date(String maxxUser, String startDate, String endDate) throws Throwable {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXX");
-        Map<String, Object> urlVariables = new HashMap<>();
-        urlVariables.put("maxxUser", maxxUser);
-        urlVariables.put("startDate", dateFormatter.parse(startDate));
-        urlVariables.put("endDate", dateFormatter.parse(endDate));
-
-        httpGetResponse = restTemplate.getForObject(getBaseUrl() + AUDIT_LOG_URL, String.class, urlVariables);
     }
 
     @Then("^the audit log server response should be maxx user is \"([^\"]*)\", operation is \"([^\"]*)\", audit time is at \"([^\"]*)\", and remark is \"([^\"]*)\"$")
@@ -96,8 +83,25 @@ public class AuditLogStepDefs extends AbstractSteps {
         assertEquals(dateFormatter.parse(expectedAuditDate), auditLog.getAuditDate());
     }
 
-    @When("^the client post http post message to Maxx restful service$")
-    public void the_client_post_http_post_message_to_Maxx_restful_service() throws Throwable {
-        httpPostResponse = restTemplate.postForEntity(getBaseUrl() + AUDIT_LOG_URL, auditLog, String.class);
+    @When("^the client post http post message to Maxx restful service \"([^\"]*)\"$")
+    public void the_client_post_http_post_message_to_Maxx_restful_service(String auditLogUrl) throws Throwable {
+        httpPostResponse = restTemplate.postForEntity(getBaseUrl() + auditLogUrl, auditLog, String.class);
+    }
+
+    @When("^the client fire http get message to \"([^\"]*)\" with Maxx user \"([^\"]*)\", start date \"([^\"]*)\", end date \"([^\"]*)\"$")
+    public void the_client_fire_http_get_message_to_with_Maxx_user_start_date_end_date(String auditLogUrl, String maxxUser, String startDate, String endDate) throws Throwable {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXX");
+        Map<String, Object> urlVariables = new HashMap<>();
+        urlVariables.put("maxxUser", maxxUser);
+        urlVariables.put("startDate", dateFormatter.parse(startDate));
+        urlVariables.put("endDate", dateFormatter.parse(endDate));
+
+        httpGetResponse = restTemplate.getForObject(getBaseUrl() + auditLogUrl, String.class, urlVariables);
+    }
+
+    @Then("^the client receives http status code of (\\d+) and Json body with \"([^\"]*)\"$")
+    public void the_client_receives_http_status_code_of_and_Json_body_with(int httpStatusCode, String auditLogId) throws Throwable {
+        assertThat(httpPostResponse.getStatusCode().value(), is(httpStatusCode));
+        assertThat(httpPostResponse.getBody(), containsString("auditLogId"));
     }
 }
