@@ -2,8 +2,6 @@ Maxx restful service now support Postgresql only. Before starting application, p
 1) createuser -U postgres --createdb -e --connection-limit=50 --pwprompt maxxsys
 2) createdb --owner=maxxsys --encoding=utf-8  --username=maxxsys -e maxxdb
 
-Please note that although we built and source level of Maxx restful service is 1.6, Maxx restful service must run on JDK8 now. We will migrate
-Maxx restful service to JDK 8 eventually.
 To run command 1, we should know database super user postgres password. To run command 2, we should know database user maxxsys password.
 
 After successfully create database and role, following profiles are supported.

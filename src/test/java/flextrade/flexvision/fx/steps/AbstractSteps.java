@@ -1,6 +1,8 @@
 package flextrade.flexvision.fx.steps;
 
+import org.flywaydb.core.Flyway;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationContextLoader;
@@ -20,7 +22,11 @@ public abstract class AbstractSteps {
     @Value("${local.server.port}")
     private int port;
 
+    @Autowired
+    protected Flyway flyway;
+
     protected String getBaseUrl() {
         return "http://localhost:" + port;
     }
+
 }

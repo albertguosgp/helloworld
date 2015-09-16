@@ -23,8 +23,14 @@ public class AuditLogService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class, propagation = Propagation.REQUIRED)
-    public void save(AuditLog auditLog) {
+    public Long save(AuditLog auditLog) {
         auditLogDao.save(auditLog);
+        return auditLog.getId();
+    }
+
+    @Transactional(rollbackFor = RuntimeException.class, propagation = Propagation.REQUIRED)
+    public void delete(Long auditLogId) {
+        auditLogDao.delete(auditLogId);
     }
 
     @Transactional

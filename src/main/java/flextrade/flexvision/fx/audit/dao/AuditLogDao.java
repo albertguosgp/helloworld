@@ -8,6 +8,8 @@ import flextrade.flexvision.fx.audit.pojo.AuditLog;
 public interface AuditLogDao {
     void save(AuditLog auditLog);
 
+    void delete(Long id);
+
     List<AuditLog> findAll();
 
     List<AuditLog> findAuditLog(AuditLogQuery auditLogQuery);

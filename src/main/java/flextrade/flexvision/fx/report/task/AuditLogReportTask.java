@@ -2,18 +2,19 @@ package flextrade.flexvision.fx.report.task;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
-import org.springframework.mail.MailSender;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 import flextrade.flexvision.fx.audit.json.AuditLogQuery;
 import flextrade.flexvision.fx.audit.pojo.AuditLog;
 import flextrade.flexvision.fx.audit.service.AuditLogService;
+import flextrade.flexvision.fx.base.service.MailService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -31,16 +32,16 @@ public class AuditLogReportTask implements Callable<Path> {
 
     @Getter
     @Setter
-    private MailSender mailSender;
+    private MailService mailService;
 
     @Getter
     @Setter
     private AuditLogService auditLogService;
 
-    public AuditLogReportTask(AuditLogQuery auditLogQuery, AuditLogService auditLogService, MailSender mailSender) {
+    public AuditLogReportTask(AuditLogQuery auditLogQuery, AuditLogService auditLogService, MailService mailService) {
         this.auditLogQuery = auditLogQuery;
         this.auditLogService = auditLogService;
-        this.mailSender = mailSender;
+        this.mailService = mailService;
     }
 
     @Override
@@ -53,6 +54,7 @@ public class AuditLogReportTask implements Callable<Path> {
     }
 
     private void sendEmail(Path tempCsvPath) {
+        mailService.send(Arrays.asList(auditLogQuery.getReplyTo()), null, createAuditLogEmailSubject(), createAuditLogEmailBody(), Arrays.asList(tempCsvPath));
     }
 
     private Path saveAuditLogsToCsv(List<AuditLog> auditLogs) {
@@ -90,5 +92,21 @@ public class AuditLogReportTask implements Callable<Path> {
 
     private CSVFormat createAuditLogsCsvHeaderFormat() {
         return CSVFormat.DEFAULT.withHeader(FILE_HEADER_MAPPING);
+    }
+
+    private String createAuditLogEmailSubject() {
+        return "Audit log history";
+    }
+
+    private String createAuditLogEmailBody() {
+        StringBuilder body = new StringBuilder();
+        String lineSeparator = System.lineSeparator();
+        body.append("Hi,")
+                .append(lineSeparator)
+                .append(lineSeparator)
+                .append("Attachment is audit log history for ")
+                .append(lineSeparator)
+                .append(auditLogQuery.toString());
+        return body.toString();
     }
 }
