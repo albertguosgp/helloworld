@@ -1,0 +1,49 @@
+#%RAML 0.8
+
+title: Maxx restful service API
+baseUri: http://localhost/{version}
+version: v1
+
+/auditlog:
+  get:
+    description: retrieve audit logs
+    queryParameters:
+      maxxUser:
+        type: string
+        description: audit log by user id
+      startDate:
+        type: string
+        description: audit log should start after this time
+      endDate:
+        type: string
+        description: audit log should end before this time
+    responses:
+        200:
+          body:
+            application/json:
+            example:
+            [
+              {
+                "id":1,
+                "maxxUser":"Johndoe",
+                "remarks":"Firm not used",
+                "operation":"Disable HK sales firm",
+                "auditDate":"2010-11-01T13:23:12Z"
+              }
+            ]
+  post:
+    description: save new audit log
+    body:
+      application/json:
+      example:
+      {
+        "maxxUser" : "Johndoe",
+        "operation" : "Disable HK sales firm",
+        "remarks" : "HK sales firm is no longer used",
+        "auditDate" : "2010-11-01T13:23:12Z"
+      }
+    responses:
+      200:
+        description: if save audit log successfully
+      400:
+        description: if saving audit log fails because format issue of json input

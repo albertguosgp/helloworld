@@ -1,0 +1,49 @@
+server:
+    port: 9000
+flyway:
+    enabled: false
+logging:
+    level.: INFO
+spring:
+    mail:
+      host: 10.4.1.6
+      port: 25
+      default-encoding: UTF-8
+    jackson:
+      date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
+---
+
+spring:
+    profiles: db-migrate
+flyway:
+    enabled: true
+    url: jdbc:postgresql://localhost:5432/maxxdb
+    user: maxxsys
+    password: Flex123!
+---
+spring:
+    profiles: development
+logging:
+    level. : DEBUG
+---
+spring:
+  profiles: integration-test
+flyway:
+  enabled: true
+  url: jdbc:postgresql://localhost:5432/maxxdb
+  user: maxxsys
+  password: Flex123!
+---
+
+spring:
+    profiles: uob-development
+    profiles.include: development
+server:
+    port: 9001
+---
+
+spring:
+    profiles: uob-production
+    profiles.include: production
+server:
+    port: 9002

@@ -1,0 +1,2 @@
+Flextrade System Inc
+Maxx restful service version is : ${application.version}
