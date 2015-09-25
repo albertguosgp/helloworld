@@ -50,13 +50,9 @@ public class MailServiceImplTest {
         List<Path> attachmentExceedsFileSizeThreshold = createAttachmentExceedsFileSizeThreshold(true);
         MimeMessageParser mailMessageParser = parseMimeMessage(recipients, cc, attachmentExceedsFileSizeThreshold);
 
-        List<String> actualRecipients = mailMessageParser.getTo().stream().map(address -> {
-            return address.toString();
-        }).collect(toList());
+        List<String> actualRecipients = mailMessageParser.getTo().stream().map(Object::toString).collect(toList());
 
-        List<String> actualCc = mailMessageParser.getCc().stream().map(address -> {
-            return address.toString();
-        }).collect(toList());
+        List<String> actualCc = mailMessageParser.getCc().stream().map(Object::toString).collect(toList());
         String actualBody = mailMessageParser.getPlainContent();
 
         assertThat(actualCc, equalTo(cc));
