@@ -58,31 +58,24 @@ public class AuditLogReportTask implements Callable<Path> {
     }
 
     private Path saveAuditLogsToCsv(List<AuditLog> auditLogs) {
-        FileWriter fileWriter = null;
-        Path tempCsvPath = null;
         try {
-            tempCsvPath = createTempFile();
-            fileWriter = new FileWriter(tempCsvPath.toFile());
-            printToCsv(auditLogs, fileWriter, tempCsvPath);
+			Path tempCsvPath = createTempFile();
+            printToCsv(auditLogs, tempCsvPath);
+			return tempCsvPath;
         } catch (IOException e) {
-            log.error("Failed to create temporary audit log csv ");
-        } finally {
-            if (fileWriter != null) {
-                try {
-                    fileWriter.flush();
-                    fileWriter.close();
-                } catch (IOException ignored) {
-                }
-            }
-            return tempCsvPath;
-        }
+            log.error("Failed to create temporary audit log csv", e);
+			throw new RuntimeException("Failed to create temporary audit log csv");
+		}
     }
 
-    private void printToCsv(List<AuditLog> auditLogs, FileWriter fileWriter, Path tempCsvPath) throws IOException {
+    private void printToCsv(List<AuditLog> auditLogs, Path tempCsvPath) throws IOException {
+		FileWriter fileWriter = new FileWriter(tempCsvPath.toFile());
         CSVPrinter printer = new CSVPrinter(fileWriter, createAuditLogsCsvHeaderFormat());
         for (AuditLog auditLog : auditLogs) {
             printer.printRecord(auditLog.getId(), auditLog.getMaxxUser(), auditLog.getOperation(), toISO8601Format(auditLog.getAuditDate()), auditLog.getRemarks());
         }
+		printer.flush();
+		printer.close();
         log.info("Audit log CSV {} created successfully", tempCsvPath.toUri());
     }
 

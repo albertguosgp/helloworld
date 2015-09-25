@@ -11,6 +11,7 @@
 
     <properties>
         <spring.boot.version>1.2.5.RELEASE</spring.boot.version>
+        <quartz.version>2.2.1</quartz.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
@@ -60,6 +61,14 @@
             <artifactId>postgresql</artifactId>
             <version>8.4-702.jdbc4</version>
         </dependency>
+
+        <!-- start scheduler -->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>${quartz.version}</version>
+        </dependency>
+
         <!-- start code helper dependencies -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -111,6 +120,10 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
