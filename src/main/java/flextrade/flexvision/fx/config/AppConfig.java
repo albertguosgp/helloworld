@@ -12,7 +12,7 @@ import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
 
 @Configuration
-@Import(value = { DatabaseConfig.class, SchedulerConfig.class, ServletConfig.class })
+@Import(value = { DatabaseConfig.class, SchedulerConfig.class})
 @EnableTransactionManagement
 @Slf4j
 public class AppConfig {
