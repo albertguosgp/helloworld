@@ -17,6 +17,8 @@ spring:
 application:
     support:
       email: fxsupport@flextrade.com
+product:
+    id: default
 ---
 
 spring:
@@ -63,3 +65,21 @@ spring:
     profiles.include: production
 server:
     port: 9002
+
+---
+spring:
+    profiles: ctfx-production
+    profiles.include: production
+server:
+    port: 9002
+product:
+    id: co_045
+---
+spring:
+    profiles: ctfx-development
+    profiles.include: development
+server:
+    port: 9000
+product:
+    id: co_045
+---
