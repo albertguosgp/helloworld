@@ -4,14 +4,12 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import flextrade.flexvision.fx.base.feature.FeatureService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
 
 import javax.annotation.PostConstruct;
 import java.util.Set;
 
-@Service
 public class CachedFeatureServiceImpl implements FeatureService{
 
 	@Autowired

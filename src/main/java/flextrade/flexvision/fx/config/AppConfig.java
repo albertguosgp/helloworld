@@ -1,5 +1,7 @@
 package flextrade.flexvision.fx.config;
 
+import flextrade.flexvision.fx.base.feature.FeatureService;
+import flextrade.flexvision.fx.base.feature.impl.CachedFeatureServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +11,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
+import org.togglz.core.manager.TogglzConfig;
 
 @Configuration
 @Import(value = { DatabaseConfig.class, SchedulerConfig.class})
@@ -25,12 +28,22 @@ public class AppConfig {
 		return asyncTaskExecutor;
 	}
 
+	@Bean
+	public TogglzConfig createFeatureConfig() {
+		return new FeaturesConfig();
+	}
+
 	/**
 	 * FeatureManager should never be called by application logic to determine if a feature is active.
 	 * Instead please use {@link flextrade.flexvision.fx.base.feature.FeatureService}
 	 * */
 	@Bean
 	public FeatureManager createFeatureManager() {
-		return new FeatureManagerBuilder().togglzConfig(new FeaturesConfig()).build();
+		return new FeatureManagerBuilder().togglzConfig(createFeatureConfig()).build();
+	}
+
+	@Bean
+	public FeatureService createFeatureService() {
+		return new CachedFeatureServiceImpl();
 	}
 }
