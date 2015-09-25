@@ -66,11 +66,6 @@
         <!-- feature toggle -->
         <dependency>
             <groupId>org.togglz</groupId>
-            <artifactId>togglz-spring-web</artifactId>
-            <version>${togglz.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.togglz</groupId>
             <artifactId>togglz-console</artifactId>
             <version>${togglz.version}</version>
         </dependency>

@@ -8,6 +8,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import lombok.extern.slf4j.Slf4j;
+import org.togglz.core.manager.FeatureManager;
+import org.togglz.core.manager.FeatureManagerBuilder;
 
 @Configuration
 @Import(value = { DatabaseConfig.class, SchedulerConfig.class, ServletConfig.class })
@@ -22,5 +24,10 @@ public class AppConfig {
 		asyncTaskExecutor.setMaxPoolSize(50);
 
 		return asyncTaskExecutor;
+	}
+
+	@Bean
+	public FeatureManager createFeatureManager() {
+		return new FeatureManagerBuilder().togglzConfig(new FeaturesConfig()).build();
 	}
 }

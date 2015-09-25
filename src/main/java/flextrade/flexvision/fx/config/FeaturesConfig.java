@@ -4,7 +4,6 @@ import flextrade.flexvision.fx.base.feature.SupportedFeature;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.TogglzConfig;
 import org.togglz.core.repository.StateRepository;
@@ -17,8 +16,9 @@ import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 @Slf4j
-@Configuration
 public class FeaturesConfig implements TogglzConfig{
+	private static final String PRODUCT_FEATURES_TABLE_POSTFIX = "_features";
+
 	@Value("${product.id:default}")
 	private String productId;
 
@@ -27,7 +27,7 @@ public class FeaturesConfig implements TogglzConfig{
 
 	@PostConstruct
 	public void init() {
-		log.info("Active product id is {} ", productId);
+		log.info("Active product id is {}, feature table {} is going to be used ", productId, productFeaturesTableName());
 	}
 
 	@Override
@@ -38,12 +38,17 @@ public class FeaturesConfig implements TogglzConfig{
 	@Override
 	public StateRepository getStateRepository() {
 		JDBCStateRepository.Builder builder = JDBCStateRepository.newBuilder(dataSource);
-		builder.createTable(false).tableName(productId + "features").noCommit(true).serializer(DefaultMapSerializer.singleline());
+		builder.createTable(false).tableName(productFeaturesTableName())
+				.noCommit(true).serializer(DefaultMapSerializer.singleline());
 		return builder.build();
 	}
 
 	@Override
 	public UserProvider getUserProvider() {
 		return new NoOpUserProvider();
+	}
+
+	private String productFeaturesTableName() {
+		return productId + PRODUCT_FEATURES_TABLE_POSTFIX;
 	}
 }
