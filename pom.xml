@@ -12,6 +12,7 @@
     <properties>
         <spring.boot.version>1.2.5.RELEASE</spring.boot.version>
         <quartz.version>2.2.1</quartz.version>
+        <togglz.version>2.2.0.Final</togglz.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
@@ -60,6 +61,18 @@
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>8.4-702.jdbc4</version>
+        </dependency>
+
+        <!-- feature toggle -->
+        <dependency>
+            <groupId>org.togglz</groupId>
+            <artifactId>togglz-spring-web</artifactId>
+            <version>${togglz.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.togglz</groupId>
+            <artifactId>togglz-console</artifactId>
+            <version>${togglz.version}</version>
         </dependency>
 
         <!-- start scheduler -->
