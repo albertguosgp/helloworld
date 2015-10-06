@@ -44,7 +44,7 @@ public class AuditLogDaoImpl implements AuditLogDao {
 		Criteria criteria = createCriteria();
 		Conjunction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("maxxUser", auditLog.getMaxxUser()));
-		conjunction.add(Restrictions.eq("auditDate", auditLog.getOperation()));
+		conjunction.add(Restrictions.eq("auditDate", auditLog.getAuditDate()));
 		conjunction.add(Restrictions.eq("operation", auditLog.getOperation()));
 
 		return !CollectionUtils.isEmpty(criteria.list());
