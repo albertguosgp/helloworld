@@ -37,7 +37,8 @@ public class AuditLogReportStepDefs extends AbstractSteps {
 
     @When("^the client post http post message to \"([^\"]*)\" with maxx user \"([^\"]*)\", start date \"([^\"]*)\", end date is \"([^\"]*)\", and reply to \"([^\"]*)\"$")
     public void the_client_post_http_post_message_to_with_maxx_user_start_date_end_date_is_and_reply_to(String auditLogReportUrl, String maxxUser, String startDate, String endDate, String replyTo) throws Throwable {
-        AuditLogQuery auditLogQuery = AuditLogQuery.of(maxxUser, toDate(startDate), toDate(endDate), replyTo);
+        Integer expectedMaxRecord = 1;
+        AuditLogQuery auditLogQuery = AuditLogQuery.of(maxxUser, toDate(startDate), toDate(endDate), replyTo, expectedMaxRecord);
         restTemplate.postForEntity(getBaseUrl() + auditLogReportUrl, auditLogQuery, String.class);
     }
 

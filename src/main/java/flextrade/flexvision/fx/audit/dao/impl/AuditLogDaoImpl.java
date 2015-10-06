@@ -49,6 +49,8 @@ public class AuditLogDaoImpl implements AuditLogDao {
 		conjunction.add(Restrictions.eq("maxxUser", auditLog.getMaxxUser()));
 		conjunction.add(Restrictions.eq("auditDate", auditLog.getAuditDate()));
 		conjunction.add(Restrictions.eq("operation", auditLog.getOperation()));
+
+		criteria.add(conjunction);
 		AuditLog auditLogFromDb = (AuditLog)criteria.uniqueResult();
 		return auditLogFromDb == null ? Optional.empty() : Optional.of(auditLogFromDb);
 	}
@@ -84,6 +86,9 @@ public class AuditLogDaoImpl implements AuditLogDao {
             conjunction.add(Restrictions.le("auditDate", auditLogQuery.getEndDate()));
         }
         criteria.add(conjunction);
+        if (auditLogQuery.getLimit() != null) {
+            criteria.setMaxResults(auditLogQuery.getLimit());
+        }
 
         return toNotNullList(criteria.list());
     }
