@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import flextrade.flexvision.fx.audit.dao.AuditLogDao;
 import flextrade.flexvision.fx.audit.json.AuditLogQuery;
@@ -31,8 +32,10 @@ public class AuditLogDaoImpl implements AuditLogDao {
 
     public void save(AuditLog auditLog) {
         log.debug("Saving audit log {}", auditLog);
-		if (exists(auditLog)) {
-			log.debug("Found existing audit log {}", auditLog);
+		Optional<AuditLog> existingAuditLog = findExistingAuditLog(auditLog);
+		if (existingAuditLog.isPresent()) {
+			log.debug("Found existing audit log {}, and won't save again", existingAuditLog);
+			auditLog.setId(existingAuditLog.get().getId());
 		} else {
 			Long identifier = (Long) sessionFactory.getCurrentSession().save(auditLog);
 			auditLog.setId(identifier);
@@ -40,14 +43,14 @@ public class AuditLogDaoImpl implements AuditLogDao {
 
     }
 
-	private boolean exists(AuditLog auditLog) {
+	private Optional<AuditLog> findExistingAuditLog(AuditLog auditLog) {
 		Criteria criteria = createCriteria();
 		Conjunction conjunction = Restrictions.conjunction();
 		conjunction.add(Restrictions.eq("maxxUser", auditLog.getMaxxUser()));
 		conjunction.add(Restrictions.eq("auditDate", auditLog.getAuditDate()));
 		conjunction.add(Restrictions.eq("operation", auditLog.getOperation()));
-
-		return !CollectionUtils.isEmpty(criteria.list());
+		AuditLog auditLogFromDb = (AuditLog)criteria.uniqueResult();
+		return auditLogFromDb == null ? Optional.empty() : Optional.of(auditLogFromDb);
 	}
 
     @Override
