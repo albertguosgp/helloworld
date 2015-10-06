@@ -15,6 +15,7 @@ import flextrade.flexvision.fx.audit.dao.AuditLogDao;
 import flextrade.flexvision.fx.audit.json.AuditLogQuery;
 import flextrade.flexvision.fx.audit.pojo.AuditLog;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import static flextrade.flexvision.fx.utils.CollectionUtils.toNotNullList;
@@ -30,9 +31,24 @@ public class AuditLogDaoImpl implements AuditLogDao {
 
     public void save(AuditLog auditLog) {
         log.debug("Saving audit log {}", auditLog);
-        Long identifier = (Long) sessionFactory.getCurrentSession().save(auditLog);
-        auditLog.setId(identifier);
+		if (exists(auditLog)) {
+			log.debug("Found existing audit log {}", auditLog);
+		} else {
+			Long identifier = (Long) sessionFactory.getCurrentSession().save(auditLog);
+			auditLog.setId(identifier);
+		}
+
     }
+
+	private boolean exists(AuditLog auditLog) {
+		Criteria criteria = createCriteria();
+		Conjunction conjunction = Restrictions.conjunction();
+		conjunction.add(Restrictions.eq("maxxUser", auditLog.getMaxxUser()));
+		conjunction.add(Restrictions.eq("auditDate", auditLog.getOperation()));
+		conjunction.add(Restrictions.eq("operation", auditLog.getOperation()));
+
+		return !CollectionUtils.isEmpty(criteria.list());
+	}
 
     @Override
     public void delete(Long id) {
