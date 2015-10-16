@@ -19,6 +19,8 @@ application:
       email: fxsupport@flextrade.com
 product:
     id: default
+preference:
+    timezone: UTC
 ---
 
 spring:
@@ -79,6 +81,8 @@ server:
     port: 30267
 product:
     id: co_045
+preference:
+    timezone: Asia/Tokyo
 rollover:
     timezone: Asia/Tokyo
     cron.expression: 0/5 * * ? * SAT-SUN
@@ -98,6 +102,8 @@ server:
     port: 30267
 product:
     id: co_045
+preference:
+  timezone: Asia/Tokyo
 rollover:
     timezone: Asia/Tokyo
     cron.expression: '0 19 0 * * ?'

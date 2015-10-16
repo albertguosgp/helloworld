@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import flextrade.flexvision.fx.audit.json.AuditLogQuery;
 import flextrade.flexvision.fx.audit.service.AuditLogService;
 import flextrade.flexvision.fx.base.service.MailService;
+import flextrade.flexvision.fx.base.service.TimeService;
 import flextrade.flexvision.fx.report.task.AuditLogReportTask;
 
 @RestController
@@ -24,8 +25,11 @@ public class ReportController {
     @Autowired
     private AuditLogService auditLogService;
 
+    @Autowired
+    private TimeService timeService;
+
     @RequestMapping(value = "/report/auditlog", method = RequestMethod.POST)
     public void publishAuditLogReport(@RequestBody AuditLogQuery auditLogQuery) {
-        asyncTaskExecutor.submit(new AuditLogReportTask(auditLogQuery, auditLogService, mailService));
+        asyncTaskExecutor.submit(new AuditLogReportTask(auditLogQuery, auditLogService, mailService, timeService));
     }
 }
