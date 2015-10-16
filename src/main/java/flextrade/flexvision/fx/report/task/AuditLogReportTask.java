@@ -3,8 +3,11 @@ package flextrade.flexvision.fx.report.task;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -75,7 +78,7 @@ public class AuditLogReportTask implements Callable<Path> {
     }
 
     private void printToCsv(List<AuditLog> auditLogs, Path tempCsvPath) throws IOException {
-		FileWriter fileWriter = new FileWriter(tempCsvPath.toFile());
+        BufferedWriter fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempCsvPath.toFile()), "UTF-8"));
         CSVPrinter printer = new CSVPrinter(fileWriter, createAuditLogsCsvHeaderFormat());
         for (AuditLog auditLog : auditLogs) {
             printer.printRecord(auditLog.getId(), auditLog.getMaxxUser(), auditLog.getOperation(), timeService.displayInPreferredTimezone(auditLog.getAuditDate()), auditLog.getRemarks());
