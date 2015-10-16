@@ -1,7 +1,5 @@
 package flextrade.flexvision.fx.base.service.impl;
 
-import com.google.common.annotations.VisibleForTesting;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

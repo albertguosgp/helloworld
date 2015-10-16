@@ -97,7 +97,7 @@
             <artifactId>guava</artifactId>
             <version>18.0</version>
         </dependency>
-        
+
         <!-- start test dependencies -->
         <dependency>
             <groupId>junit</groupId>

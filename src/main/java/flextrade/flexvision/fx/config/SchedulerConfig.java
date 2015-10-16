@@ -36,8 +36,8 @@ public class SchedulerConfig {
     @Value("${rollover.url:}")
     private String rollOverUrl;
 
-	@Value("${rollover.support.email:}")
-	private String rollOverSupportEmail;
+    @Value("${rollover.support.email:}")
+    private String rollOverSupportEmail;
 
     @Bean
     public SchedulerFactoryBean createScheduler(FeatureService featureService, ObjectMapper objectMapper, MailService mailService,
@@ -57,7 +57,7 @@ public class SchedulerConfig {
     @Bean
     public JobDetailFactoryBean createPositionRollOverReminderEmailJobDetailFactoryBean(ObjectMapper objectMapper, MailService mailService,
                                                                                         RestTemplate restTemplate, TimeService timeService) {
-		Map<String, ? super Object> jobDataMap = createJobDataMap(objectMapper, mailService, restTemplate, timeService);
+        Map<String, ? super Object> jobDataMap = createJobDataMap(objectMapper, mailService, restTemplate, timeService);
 
         JobDetailFactoryBean factory = new JobDetailFactoryBean();
         factory.setJobClass(PositionRollOverReminderEmailTask.class);
@@ -67,7 +67,7 @@ public class SchedulerConfig {
         return factory;
     }
 
-	@Bean
+    @Bean
     public CronTriggerFactoryBean createPositionManualRollerOverReminderEmailCronTrigger(ObjectMapper objectMapper, MailService mailService,
                                                                                          RestTemplate restTemplate, TimeService timeService) {
         CronTriggerFactoryBean positionManualRollOverEmailCronTriggerFactoryBean = new CronTriggerFactoryBean();
@@ -78,13 +78,14 @@ public class SchedulerConfig {
         return positionManualRollOverEmailCronTriggerFactoryBean;
     }
 
-	private Map<String, ? super Object> createJobDataMap(ObjectMapper objectMapper, MailService mailService, RestTemplate restTemplate, TimeService timeService) {
-		Map<String, ? super Object> jobDataMap = new HashMap<>(); jobDataMap.put("objectMapper", objectMapper);
-		jobDataMap.put("rollOverUrl", rollOverUrl);
-		jobDataMap.put("mailService", mailService);
-		jobDataMap.put("restTemplate", restTemplate);
-		jobDataMap.put("timeService", timeService);
-		jobDataMap.put("rollOverSupportEmail", rollOverSupportEmail);
-		return jobDataMap;
-	}
+    private Map<String, ? super Object> createJobDataMap(ObjectMapper objectMapper, MailService mailService, RestTemplate restTemplate, TimeService timeService) {
+        Map<String, ? super Object> jobDataMap = new HashMap<>();
+        jobDataMap.put("objectMapper", objectMapper);
+        jobDataMap.put("rollOverUrl", rollOverUrl);
+        jobDataMap.put("mailService", mailService);
+        jobDataMap.put("restTemplate", restTemplate);
+        jobDataMap.put("timeService", timeService);
+        jobDataMap.put("rollOverSupportEmail", rollOverSupportEmail);
+        return jobDataMap;
+    }
 }

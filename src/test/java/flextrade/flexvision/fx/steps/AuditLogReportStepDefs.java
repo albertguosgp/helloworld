@@ -8,21 +8,17 @@ import org.hamcrest.Matchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import javax.mail.internet.MimeMessage;
 
-import cucumber.api.PendingException;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import flextrade.flexvision.fx.audit.json.AuditLogQuery;
 import flextrade.flexvision.fx.base.util.MimeMessageParser;
 
 import static flextrade.flexvision.fx.base.service.TimeService.toDate;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.springframework.http.HttpStatus.OK;
 
 @WebIntegrationTest
 public class AuditLogReportStepDefs extends AbstractSteps {

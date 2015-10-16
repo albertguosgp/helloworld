@@ -24,7 +24,6 @@ import flextrade.flexvision.fx.audit.json.AuditLogQuery;
 import flextrade.flexvision.fx.audit.pojo.AuditLog;
 import flextrade.flexvision.fx.audit.service.AuditLogService;
 import flextrade.flexvision.fx.base.service.MailService;
-import flextrade.flexvision.fx.base.service.TimeService;
 import flextrade.flexvision.fx.base.service.impl.FreezableTimeServiceImpl;
 
 import static flextrade.flexvision.fx.audit.pojo.AuditLog.of;
