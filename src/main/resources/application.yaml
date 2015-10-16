@@ -36,12 +36,11 @@ spring:
       port: 25
       default-encoding: UTF-8
       attachment:
-      threshold:
-        5000000
+      threshold: 5000000
     jackson:
           date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
 logging:
-    level. : DEBUG
+    level. : INFO
 
 ---
 spring:
@@ -70,8 +69,14 @@ server:
 spring:
     profiles: ctfx-production
     profiles.include: production
+    mail:
+      host: localhost
+      port: 25
+      default-encoding: UTF-8
+      attachment:
+        threshold: 5000000
 server:
-    port: 9002
+    port: 30267
 product:
     id: co_045
 rollover:
@@ -80,12 +85,17 @@ rollover:
     url: http://localhost/positionRollOver
     support.email: support@ctfx.com
 ---
-
 spring:
     profiles: ctfx-development
     profiles.include: development
+    mail:
+      host: localhost
+      port: 25
+      default-encoding: UTF-8
+      attachment:
+        threshold: 5000000
 server:
-    port: 9000
+    port: 30267
 product:
     id: co_045
 rollover:
