@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -89,6 +90,8 @@ public class AuditLogDaoImpl implements AuditLogDao {
         if (auditLogQuery.getLimit() != null) {
             criteria.setMaxResults(auditLogQuery.getLimit());
         }
+
+        criteria.addOrder(Order.desc("auditDate"));
 
         return toNotNullList(criteria.list());
     }
