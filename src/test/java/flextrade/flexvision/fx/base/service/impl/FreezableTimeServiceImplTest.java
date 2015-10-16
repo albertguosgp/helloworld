@@ -7,15 +7,17 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Date;
 
 import flextrade.flexvision.fx.base.service.FreezableTimeService;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class FreezableTimeServiceImplTest {
 
-    private static final FreezableTimeService freezableTimeService = new FreezableTimeServiceImpl();
+    private static final FreezableTimeServiceImpl freezableTimeService = new FreezableTimeServiceImpl();
 
     @Test
     public void should_be_able_to_freeze_time() throws InterruptedException {
@@ -32,6 +34,16 @@ public class FreezableTimeServiceImplTest {
         freezableTimeService.unfreezeTime();
 
         assertTrue(freezableTimeService.now().isAfter(getTimeFrozeTo()));
+    }
+
+    @Test
+    public void should_be_able_to_display_in_preferred_timezone() {
+        String preferredTimezone = "Asia/Tokyo";
+        String expectedTimeInTokyo = "2015-11-01T11:12:11+09:00[Asia/Tokyo]";
+        freezableTimeService.setPreferredTimezone(preferredTimezone);
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(2015, 11, 1, 11, 12, 11, 0, ZoneId.of(preferredTimezone));
+
+        assertEquals(expectedTimeInTokyo, freezableTimeService.displayInPreferredTimezone(Date.from(zonedDateTime.toInstant())));
     }
 
     private void freezeTime() {

@@ -24,6 +24,8 @@ import flextrade.flexvision.fx.audit.json.AuditLogQuery;
 import flextrade.flexvision.fx.audit.pojo.AuditLog;
 import flextrade.flexvision.fx.audit.service.AuditLogService;
 import flextrade.flexvision.fx.base.service.MailService;
+import flextrade.flexvision.fx.base.service.TimeService;
+import flextrade.flexvision.fx.base.service.impl.FreezableTimeServiceImpl;
 
 import static flextrade.flexvision.fx.audit.pojo.AuditLog.of;
 import static flextrade.flexvision.fx.report.task.AuditLogReportTask.FILE_HEADER_MAPPING;
@@ -42,12 +44,16 @@ public class AuditLogReportTaskTest {
     @Mock
     MailService mailService;
 
+    FreezableTimeServiceImpl timeService = new FreezableTimeServiceImpl();
+
     private List<AuditLog> auditLogs;
 
     private Path tempCsvFile;
 
     @Before
     public void before() {
+        timeService.setPreferredTimezone("America/New_York");
+
         ZonedDateTime nonFarmPayrollDay = ZonedDateTime.of(2015, 8, 23, 12, 11, 10, 0, ZoneId.of("America/New_York"));
         AuditLog johnDoeAuditLog = of(123l, "Johndoe", "Remove user Mike", Date.from(nonFarmPayrollDay.toInstant()), "User Mike is no longer used");
         AuditLog johnRoeAuditLog = of(124l, "JohnRoe", "Remove user Jenny", Date.from(nonFarmPayrollDay.toInstant()), "User Jenny is no longer used");
@@ -65,7 +71,7 @@ public class AuditLogReportTaskTest {
 
     @Test
     public void should_create_temp_audit_log_csv() throws Exception {
-        AuditLogReportTask auditLogReportTask = new AuditLogReportTask(auditLogQuery, auditLogService, mailService);
+        AuditLogReportTask auditLogReportTask = new AuditLogReportTask(auditLogQuery, auditLogService, mailService, timeService);
         tempCsvFile = auditLogReportTask.call();
         List<AuditLog> actualAuditFromCsv = readAuditLogsFromCsv(tempCsvFile);
 

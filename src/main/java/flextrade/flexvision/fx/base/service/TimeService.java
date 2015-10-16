@@ -12,6 +12,8 @@ public interface TimeService {
 
     LocalDate valueDate();
 
+    String displayInPreferredTimezone(Date date);
+
     static String toISO8601Format(Date date) {
         ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
         return zonedDateTime.toInstant().toString();
