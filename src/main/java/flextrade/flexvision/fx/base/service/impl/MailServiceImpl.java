@@ -67,7 +67,7 @@ public class MailServiceImpl implements MailService {
 
         try {
             mailSender.send(mailMessage);
-			log.info("Email sent successfully");
+            log.info("Email sent successfully");
         } catch (MailException e) {
             log.error("Failed to send email message", e);
         }

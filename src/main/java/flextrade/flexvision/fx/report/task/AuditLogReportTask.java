@@ -5,7 +5,6 @@ import org.apache.commons.csv.CSVPrinter;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
@@ -22,8 +21,6 @@ import flextrade.flexvision.fx.base.service.TimeService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-
-import static flextrade.flexvision.fx.base.service.TimeService.toISO8601Format;
 
 @Slf4j
 public class AuditLogReportTask implements Callable<Path> {
@@ -68,13 +65,13 @@ public class AuditLogReportTask implements Callable<Path> {
 
     private Path saveAuditLogsToCsv(List<AuditLog> auditLogs) {
         try {
-			Path tempCsvPath = createTempFile();
+            Path tempCsvPath = createTempFile();
             printToCsv(auditLogs, tempCsvPath);
-			return tempCsvPath;
+            return tempCsvPath;
         } catch (IOException e) {
             log.error("Failed to create temporary audit log csv", e);
-			throw new RuntimeException("Failed to create temporary audit log csv");
-		}
+            throw new RuntimeException("Failed to create temporary audit log csv");
+        }
     }
 
     private void printToCsv(List<AuditLog> auditLogs, Path tempCsvPath) throws IOException {
@@ -83,8 +80,8 @@ public class AuditLogReportTask implements Callable<Path> {
         for (AuditLog auditLog : auditLogs) {
             printer.printRecord(auditLog.getId(), auditLog.getMaxxUser(), auditLog.getOperation(), timeService.displayInPreferredTimezone(auditLog.getAuditDate()), auditLog.getRemarks());
         }
-		printer.flush();
-		printer.close();
+        printer.flush();
+        printer.close();
         log.info("Audit log CSV {} created successfully", tempCsvPath.toUri());
     }
 

@@ -17,8 +17,6 @@ import flextrade.flexvision.fx.audit.dao.AuditLogDao;
 import flextrade.flexvision.fx.audit.json.AuditLogQuery;
 import flextrade.flexvision.fx.audit.pojo.AuditLog;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import static flextrade.flexvision.fx.utils.CollectionUtils.toNotNullList;
 import static org.springframework.util.StringUtils.isEmpty;
@@ -33,28 +31,28 @@ public class AuditLogDaoImpl implements AuditLogDao {
 
     public void save(AuditLog auditLog) {
         log.debug("Saving audit log {}", auditLog);
-		Optional<AuditLog> existingAuditLog = findExistingAuditLog(auditLog);
-		if (existingAuditLog.isPresent()) {
-			log.debug("Found existing audit log {}, and won't save again", existingAuditLog);
-			auditLog.setId(existingAuditLog.get().getId());
-		} else {
-			Long identifier = (Long) sessionFactory.getCurrentSession().save(auditLog);
-			auditLog.setId(identifier);
-		}
+        Optional<AuditLog> existingAuditLog = findExistingAuditLog(auditLog);
+        if (existingAuditLog.isPresent()) {
+            log.debug("Found existing audit log {}, and won't save again", existingAuditLog);
+            auditLog.setId(existingAuditLog.get().getId());
+        } else {
+            Long identifier = (Long) sessionFactory.getCurrentSession().save(auditLog);
+            auditLog.setId(identifier);
+        }
 
     }
 
-	private Optional<AuditLog> findExistingAuditLog(AuditLog auditLog) {
-		Criteria criteria = createCriteria();
-		Conjunction conjunction = Restrictions.conjunction();
-		conjunction.add(Restrictions.eq("maxxUser", auditLog.getMaxxUser()));
-		conjunction.add(Restrictions.eq("auditDate", auditLog.getAuditDate()));
-		conjunction.add(Restrictions.eq("operation", auditLog.getOperation()));
+    private Optional<AuditLog> findExistingAuditLog(AuditLog auditLog) {
+        Criteria criteria = createCriteria();
+        Conjunction conjunction = Restrictions.conjunction();
+        conjunction.add(Restrictions.eq("maxxUser", auditLog.getMaxxUser()));
+        conjunction.add(Restrictions.eq("auditDate", auditLog.getAuditDate()));
+        conjunction.add(Restrictions.eq("operation", auditLog.getOperation()));
 
-		criteria.add(conjunction);
-		AuditLog auditLogFromDb = (AuditLog)criteria.uniqueResult();
-		return auditLogFromDb == null ? Optional.empty() : Optional.of(auditLogFromDb);
-	}
+        criteria.add(conjunction);
+        AuditLog auditLogFromDb = (AuditLog) criteria.uniqueResult();
+        return auditLogFromDb == null ? Optional.empty() : Optional.of(auditLogFromDb);
+    }
 
     @Override
     public void delete(Long id) {
