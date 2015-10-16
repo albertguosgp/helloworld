@@ -20,7 +20,7 @@ application:
 product:
     id: default
 preference:
-    timezone: UTC
+    timezone: America/New_York
 ---
 
 spring:

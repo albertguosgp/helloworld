@@ -24,7 +24,7 @@ public class FreezableTimeServiceImpl implements FreezableTimeService {
 
     @Getter
     @Setter
-    @Value("${preference.timezone: UTC}")
+    @Value("${preference.timezone: America/New_York}")
     private String preferredTimezone;
 
     private ZonedDateTime now;
