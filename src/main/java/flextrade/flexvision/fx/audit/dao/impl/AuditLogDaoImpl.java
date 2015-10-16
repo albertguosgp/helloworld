@@ -86,6 +86,9 @@ public class AuditLogDaoImpl implements AuditLogDao {
             conjunction.add(Restrictions.le("auditDate", auditLogQuery.getEndDate()));
         }
         criteria.add(conjunction);
+        if (auditLogQuery.getLimit() != null) {
+            criteria.setMaxResults(auditLogQuery.getLimit());
+        }
 
         return toNotNullList(criteria.list());
     }
