@@ -5,7 +5,6 @@ import org.apache.commons.codec.binary.Hex;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -75,9 +74,8 @@ public class Server {
         byte[] data = new byte[numRead];
         byteBuffer.get(data, 0, numRead);
 
-
-        String receivedString = new String(data, Charset.forName("UTF-8"));
-        log.debug("Received string is {} in HEX string is {}", receivedString, Hex.encodeHexString(receivedString.getBytes(Charset.forName("UTF-8"))));
+        String receivedString = new String(data);
+        log.debug("Received string is {} in HEX string is {}", receivedString, Hex.encodeHexString(receivedString.getBytes()));
     }
 
     private void handleAccept(SelectionKey selectionKey) throws IOException {
@@ -85,8 +83,7 @@ public class Server {
         channel.configureBlocking(false);
         channel.register(selector, SelectionKey.OP_READ);
 
-        channel.write(ByteBuffer.wrap("Welcome to nio server \r\n".getBytes(Charset.forName("UTF-8"))));
-
+        channel.write(ByteBuffer.wrap("你是歌手吗？ \r\n".getBytes()));
     }
 
     public static void main(String... args) {

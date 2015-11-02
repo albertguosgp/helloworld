@@ -14,7 +14,7 @@ public class Client {
         try (
                 Socket echoSocket = new Socket("localhost", 9091);
                 PrintWriter out =
-                        new PrintWriter(new OutputStreamWriter(echoSocket.getOutputStream(), Charset.forName("UTF-8")), true);
+                        new PrintWriter(new OutputStreamWriter(echoSocket.getOutputStream()), true);
                 BufferedReader in =
                         new BufferedReader(
                                 new InputStreamReader(echoSocket.getInputStream()));
@@ -25,7 +25,7 @@ public class Client {
             while (true) {
                 try {
                     Thread.sleep(3000);
-                    out.print("1234567");
+                    out.print("我是歌手");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
