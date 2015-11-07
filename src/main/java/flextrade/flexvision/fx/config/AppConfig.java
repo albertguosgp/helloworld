@@ -17,7 +17,7 @@ import flextrade.flexvision.fx.base.feature.impl.CachedFeatureServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
-@Import(value = {DatabaseConfig.class, SchedulerConfig.class})
+@Import(value = {DatabaseConfig.class, SchedulerConfig.class, VertxConfig.class})
 @EnableTransactionManagement
 @Slf4j
 public class AppConfig {
