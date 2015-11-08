@@ -27,7 +27,8 @@ public class VertxConfig {
     @Bean
     @DependsOn(value = "vertx")
     public EventBus createEventBus() {
-        return vertx.eventBus();
+        EventBus eventBus = vertx.eventBus();
+        return eventBus;
     }
 
     @Bean(name = "vertx")
@@ -41,7 +42,7 @@ public class VertxConfig {
                 countDownLatch.countDown();
                 log.info("Clustered vertx created successfully" + vertx);
             } else {
-                log.error("Failed: " + res.cause());
+                log.error("Failed to cluster vertx " + res.cause());
             }
         });
         boolean isVertxClustered = countDownLatch.await(30, TimeUnit.SECONDS);
