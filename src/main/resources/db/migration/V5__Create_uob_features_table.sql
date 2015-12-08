@@ -1,0 +1,10 @@
+CREATE TABLE co_031_features (
+  FEATURE_NAME    VARCHAR(100) PRIMARY KEY,
+  FEATURE_ENABLED INTEGER,
+  STRATEGY_ID     VARCHAR(200),
+  STRATEGY_PARAMS VARCHAR(2000)
+);
+
+INSERT INTO co_031_features(
+  feature_name, feature_enabled, strategy_id, strategy_params)
+VALUES ('ALERT_TRIGGER_ON_PRICE', 1, NULL, NULL);
