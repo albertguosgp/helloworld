@@ -1,11 +1,8 @@
-<project
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://maven.apache.org/POM/4.0.0">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>flextrade.flexvision.fx</groupId>
     <artifactId>maxx-restful-service</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
     <name>Maxx restful service</name>
 
@@ -195,7 +192,7 @@
         <connection>scm:git:http://172.27.0.105/maxx/maxx-restful-service.git</connection>
         <url>http://172.27.0.105/maxx/maxx-restful-service/</url>
         <developerConnection>scm:git:http://172.27.0.105/maxx/maxx-restful-service.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>maxx-restful-service-1.0.0</tag>
   </scm>
 
     <distributionManagement>
