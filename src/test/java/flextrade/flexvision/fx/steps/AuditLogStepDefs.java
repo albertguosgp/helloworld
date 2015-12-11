@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,13 +49,13 @@ public class AuditLogStepDefs extends AbstractSteps {
 
     @Given("^maxx user is \"([^\"]*)\", operation is \"([^\"]*)\", audit time is at \"([^\"]*)\", and remark is \"([^\"]*)\"$")
     public void maxx_user_is_operation_is_audit_time_is_at_and_remark_is(String maxxUser, String operation, String auditDate, String remarks) throws Throwable {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
-        auditLog = new AuditLog();
-        auditLog.setMaxxUser(maxxUser);
-        auditLog.setOperation(operation);
-        auditLog.setRemarks(remarks);
-        auditLog.setAuditDate(dateFormatter.parse(auditDate));
-    }
+		Instant instant = Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse(auditDate));
+		auditLog = new AuditLog();
+		auditLog.setMaxxUser(maxxUser);
+		auditLog.setOperation(operation);
+		auditLog.setRemarks(remarks);
+		auditLog.setAuditDate(new Date(instant.toEpochMilli()));
+	}
 
     @Then("^the audit log server response should be maxx user is \"([^\"]*)\", operation is \"([^\"]*)\", audit time is at \"([^\"]*)\", and remark is \"([^\"]*)\"$")
     public void the_audit_log_server_response_should_be_maxx_user_is_operation_is_audit_time_is_at_and_remark_is(String expectedMaxxUser, String ExpectedOperation, String expectedAuditDate, String expectedRemark) throws Throwable {
@@ -88,11 +91,11 @@ public class AuditLogStepDefs extends AbstractSteps {
 
     @When("^the client fire http get message to \"([^\"]*)\" with Maxx user \"([^\"]*)\", start date \"([^\"]*)\", end date \"([^\"]*)\"$")
     public void the_client_fire_http_get_message_to_with_Maxx_user_start_date_end_date(String auditLogUrl, String maxxUser, String startDate, String endDate) throws Throwable {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXX");
         Map<String, Object> urlVariables = new HashMap<>();
         urlVariables.put("maxxUser", maxxUser);
-        urlVariables.put("startDate", dateFormatter.parse(startDate));
-        urlVariables.put("endDate", dateFormatter.parse(endDate));
+        urlVariables.put("startDate", startDate);
+        urlVariables.put("endDate", endDate);
+		urlVariables.put("limit", 1000);
 
         httpGetResponse = restTemplate.getForObject(getBaseUrl() + auditLogUrl, String.class, urlVariables);
     }

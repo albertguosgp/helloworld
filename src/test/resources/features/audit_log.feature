@@ -9,5 +9,5 @@ Feature:
     When the client post http post message to Maxx restful service "/auditlog"
     Then the client receives http status code of 200 and Json body with "auditLogId"
     And the Maxx restful service database save audit log with Maxx user "Johndoe", operation is "Disable HK sales firm", audit time is at "2010-11-01T13:23:12Z", and remark is "Firm not used"
-    When the client fire http get message to "/auditlog" with Maxx user "Johndoe", start date "2009-11-01T13:23:12Z", end date "2011-11-01T13:23:12Z"
+    When the client fire http get message to "/auditlog?maxxUser={maxxUser}&startDate={startDate}&endDate={endDate}&limit={limit}" with Maxx user "Johndoe", start date "2009-11-01T13:23:12.333Z", end date "2011-11-01T13:23:12Z"
     Then the audit log server response should be maxx user is "Johndoe", operation is "Disable HK sales firm", audit time is at "2010-11-01T13:23:12Z", and remark is "Firm not used"

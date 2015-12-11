@@ -105,7 +105,7 @@ public class AuditLogReportTask implements Callable<Path> {
                 .append(lineSeparator)
                 .append("Attachment is audit log history for ")
                 .append(lineSeparator)
-                .append(auditLogQuery.convertToEmailMessage());
+                .append(auditLogQuery.toEmailBody());
         return body.toString();
     }
 }

@@ -1,10 +1,17 @@
 package flextrade.flexvision.fx.config;
 
+import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.datetime.DateFormatter;
+import org.springframework.format.datetime.DateFormatterRegistrar;
+import org.springframework.format.number.NumberFormatAnnotationFormatterFactory;
+import org.springframework.format.support.DefaultFormattingConversionService;
+import org.springframework.format.support.FormattingConversionService;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
@@ -16,8 +23,10 @@ import flextrade.flexvision.fx.base.feature.FeatureService;
 import flextrade.flexvision.fx.base.feature.impl.CachedFeatureServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 
+import java.text.SimpleDateFormat;
+
 @Configuration
-@Import(value = {DatabaseConfig.class, SchedulerConfig.class})
+@Import(value = {DatabaseConfig.class})
 @EnableTransactionManagement
 @Slf4j
 public class AppConfig {
@@ -55,4 +64,18 @@ public class AppConfig {
     public FeatureService createFeatureService() {
         return new CachedFeatureServiceImpl();
     }
+
+	@Bean
+	public FormattingConversionService conversionService() {
+		DefaultFormattingConversionService conversionService = new DefaultFormattingConversionService(false);
+		conversionService.addFormatterForFieldAnnotation(new NumberFormatAnnotationFormatterFactory());
+		// Register date conversion with a specific global format
+		DateFormatterRegistrar dateFormatterRegistrar = new DateFormatterRegistrar();
+		DateFormatter dateFormatter = new DateFormatter();
+		dateFormatter.setIso(DateTimeFormat.ISO.DATE_TIME);
+		dateFormatterRegistrar.setFormatter(dateFormatter);
+		dateFormatterRegistrar.registerFormatters(conversionService);
+
+		return conversionService;
+	}
 }

@@ -73,7 +73,7 @@ public class AuditLogReportTaskTest {
     @Test
     public void testConvertAuditLogQueryToEmailMessage(){
         AuditLogQuery query = AuditLogQuery.of("johnDoe", new Date(0), new Date(1000), "someEmail@flextrade.com", 10);
-        String message = query.convertToEmailMessage();
+        String message = query.toEmailBody();
         Assert.assertEquals(true, message.contains("AuditLogQuery(Admin User=johnDoe, startDate="));
     }
 

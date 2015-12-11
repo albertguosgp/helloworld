@@ -2,7 +2,6 @@ package flextrade.flexvision.fx.audit.json;
 
 import java.util.Date;
 
-import com.google.common.annotations.VisibleForTesting;
 import lombok.Data;
 
 @Data
@@ -24,7 +23,7 @@ public class AuditLogQuery {
         return auditLogQuery;
     }
 
-    public String convertToEmailMessage(){
+    public String toEmailBody(){
         StringBuilder builder = new StringBuilder();
         builder.append("AuditLogQuery(Admin User=");
         builder.append(maxxUser);
