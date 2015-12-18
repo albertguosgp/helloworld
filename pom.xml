@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>flextrade.flexvision.fx</groupId>
     <artifactId>maxx-restful-service</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
     <name>Maxx restful service</name>
 
@@ -192,7 +192,7 @@
         <connection>scm:git:http://172.27.0.105/maxx/maxx-restful-service.git</connection>
         <url>http://172.27.0.105/maxx/maxx-restful-service/</url>
         <developerConnection>scm:git:http://172.27.0.105/maxx/maxx-restful-service.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>maxx-restful-service-1.0.1</tag>
   </scm>
 
     <distributionManagement>
