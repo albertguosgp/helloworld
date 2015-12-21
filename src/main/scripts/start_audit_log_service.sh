@@ -36,12 +36,14 @@ JAVA_8_HOME=$HOME/jdk1.8.0_60
 PROFILE=-Dspring.profiles.active=ctfx-development
 EXECUTABLE=$FLEXPRODUCT/jars/audit-log-service.jar
 ENCODING=-Dfile.encoding=UTF-8
+XMX=-Xmx500m
+XMS=-Xms500m
 
 echo "Using Java $JAVA_8_HOME"
 echo "Using profile $PROFILE"
 echo "Using file encoding $ENCODING"
 echo "Using executable $EXECUTABLE"
 
-${JAVA_8_HOME}/bin/java -jar $PROFILE $ENCODING $EXECUTABLE > $LOG_DIR/audit$$.log 2>&1 &
+${JAVA_8_HOME}/bin/java -jar $XMX $XMS $PROFILE $ENCODING $EXECUTABLE > $LOG_DIR/audit$$.log 2>&1 &
 
 echo "Audit log started"
