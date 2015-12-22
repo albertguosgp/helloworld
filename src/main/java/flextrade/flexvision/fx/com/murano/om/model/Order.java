@@ -10,4 +10,8 @@ public interface Order {
     Acceptor getAcceptor();
 
     OrderState getOrderState();
+
+    void setOrderState(OrderState orderState);
+
+    void handleEvent(OrderEvent orderEvent);
 }
