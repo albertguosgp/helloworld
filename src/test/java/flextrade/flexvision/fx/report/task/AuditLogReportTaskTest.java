@@ -1,5 +1,7 @@
 package flextrade.flexvision.fx.report.task;
 
+import flextrade.flexvision.fx.report.AuditLogReportComposer;
+import flextrade.flexvision.fx.report.ReportType;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.junit.After;
@@ -79,12 +81,14 @@ public class AuditLogReportTaskTest {
 
     @Test
     public void should_create_temp_audit_log_csv() throws Exception {
-        AuditLogReportTask auditLogReportTask = new AuditLogReportTask(auditLogQuery, auditLogService, mailService, timeService);
-        tempCsvFile = auditLogReportTask.call();
-        List<AuditLog> actualAuditFromCsv = readAuditLogsFromCsv(tempCsvFile);
+		AuditLogReportComposer auditLogReportComposer = new AuditLogReportComposer();
+		auditLogReportComposer.setTimeService(timeService);
+		AuditLogReportTask auditLogReportTask = new AuditLogReportTask(auditLogQuery, ReportType.CSV, auditLogService, mailService, auditLogReportComposer);
+		tempCsvFile = auditLogReportTask.call();
+		List<AuditLog> actualAuditFromCsv = readAuditLogsFromCsv(tempCsvFile);
 
-        assertThat(auditLogs, equalTo(actualAuditFromCsv));
-    }
+		assertThat(auditLogs, equalTo(actualAuditFromCsv));
+	}
 
     private List<AuditLog> readAuditLogsFromCsv(Path tempCsvFile) throws IOException {
         CSVFormat auditLogCsvFormat = CSVFormat.DEFAULT.withHeader(FILE_HEADER_MAPPING);

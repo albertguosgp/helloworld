@@ -1,5 +1,7 @@
 package flextrade.flexvision.fx.report.task;
 
+import flextrade.flexvision.fx.report.AuditLogReportComposer;
+import flextrade.flexvision.fx.report.ReportType;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
@@ -17,10 +19,13 @@ import flextrade.flexvision.fx.audit.json.AuditLogQuery;
 import flextrade.flexvision.fx.audit.pojo.AuditLog;
 import flextrade.flexvision.fx.audit.service.AuditLogService;
 import flextrade.flexvision.fx.base.service.MailService;
-import flextrade.flexvision.fx.base.service.TimeService;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.actuate.endpoint.AutoConfigurationReportEndpoint;
+
+import static flextrade.flexvision.fx.report.ReportType.EXCEL;
 
 @Slf4j
 public class AuditLogReportTask implements Callable<Path> {
@@ -41,56 +46,30 @@ public class AuditLogReportTask implements Callable<Path> {
 
     @Getter
     @Setter
-    private TimeService timeService;
+    private AuditLogReportComposer auditLogReportComposer;
 
-    public AuditLogReportTask(AuditLogQuery auditLogQuery, AuditLogService auditLogService, MailService mailService, TimeService timeService) {
+	private ReportType reportType;
+
+    public AuditLogReportTask(AuditLogQuery auditLogQuery, ReportType reportType, AuditLogService auditLogService, MailService mailService,
+                              AuditLogReportComposer auditLogReportComposer) {
         this.auditLogQuery = auditLogQuery;
         this.auditLogService = auditLogService;
         this.mailService = mailService;
-        this.timeService = timeService;
+        this.auditLogReportComposer = auditLogReportComposer;
+		this.reportType = reportType;
     }
 
     @Override
     public Path call() throws Exception {
         log.debug("Starting AuditLogReportTask with {}", auditLogQuery);
         List<AuditLog> auditLogs = auditLogService.get(auditLogQuery);
-        Path tempCsvPath = saveAuditLogsToCsv(auditLogs);
-        sendEmail(tempCsvPath);
-        return tempCsvPath;
+        Path tempReportPath = auditLogReportComposer.createAuditLog(auditLogs, reportType);
+        sendEmail(tempReportPath);
+        return tempReportPath;
     }
 
     private void sendEmail(Path tempCsvPath) {
         mailService.send(Arrays.asList(auditLogQuery.getReplyTo()), null, createAuditLogEmailSubject(), createAuditLogEmailBody(), Arrays.asList(tempCsvPath));
-    }
-
-    private Path saveAuditLogsToCsv(List<AuditLog> auditLogs) {
-        try {
-            Path tempCsvPath = createTempFile();
-            printToCsv(auditLogs, tempCsvPath);
-            return tempCsvPath;
-        } catch (IOException e) {
-            log.error("Failed to create temporary audit log csv", e);
-            throw new RuntimeException("Failed to create temporary audit log csv");
-        }
-    }
-
-    private void printToCsv(List<AuditLog> auditLogs, Path tempCsvPath) throws IOException {
-        BufferedWriter fileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempCsvPath.toFile()), "UTF-8"));
-        CSVPrinter printer = new CSVPrinter(fileWriter, createAuditLogsCsvHeaderFormat());
-        for (AuditLog auditLog : auditLogs) {
-            printer.printRecord(auditLog.getId(), auditLog.getMaxxUser(), auditLog.getOperation(), timeService.displayInPreferredTimezone(auditLog.getAuditDate()), auditLog.getRemarks());
-        }
-        printer.flush();
-        printer.close();
-        log.info("Audit log CSV {} created successfully", tempCsvPath.toUri());
-    }
-
-    private Path createTempFile() throws IOException {
-        return Files.createTempFile("audit-log-", ".csv");
-    }
-
-    private CSVFormat createAuditLogsCsvHeaderFormat() {
-        return CSVFormat.DEFAULT.withHeader(FILE_HEADER_MAPPING);
     }
 
     private String createAuditLogEmailSubject() {
