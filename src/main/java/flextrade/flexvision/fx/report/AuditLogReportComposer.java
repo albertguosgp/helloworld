@@ -46,16 +46,19 @@ public class AuditLogReportComposer {
 		Map<String, CellStyle> styles = createStyles(workbook);
 
 		initWorkBookSheetStyle(auditLogSheet);
-        createAuditLogSheetTitleRow(auditLogSheet, styles);
-        createAuditLogHeaderRow(auditLogSheet, styles);
-        createAuditLogCell(auditLogs, auditLogSheet, styles);
-
-		auditLogSheet.autoSizeColumn(0);
-		auditLogSheet.autoSizeColumn(1);
-		auditLogSheet.autoSizeColumn(2);
-		auditLogSheet.autoSizeColumn(3);
+        createSheetTitleRow(auditLogSheet, styles);
+        createSheetHeaderRow(auditLogSheet, styles);
+        createCell(auditLogs, auditLogSheet, styles);
+		autoSizeColumn(auditLogSheet);
 
 		return createExcelFile(workbook);
+	}
+
+	private void autoSizeColumn(Sheet auditLogSheet) {
+		List<String> columns = Arrays.asList(FILE_HEADER_MAPPING);
+		for (int i = 0; i < columns.size(); ++i) {
+			auditLogSheet.autoSizeColumn(i);
+		}
 	}
 
 	private Path createExcelFile(Workbook workbook) throws IOException {
@@ -81,7 +84,7 @@ public class AuditLogReportComposer {
 		return new XSSFWorkbook();
 	}
 
-	private void createAuditLogCell(List<AuditLog> auditLogs, Sheet auditLogSheet, Map<String, CellStyle> styles) {
+	private void createCell(List<AuditLog> auditLogs, Sheet auditLogSheet, Map<String, CellStyle> styles) {
         int rowNumStart = 2;
         for (AuditLog auditLog : auditLogs) {
             Row row = auditLogSheet.createRow(rowNumStart++);
@@ -93,7 +96,7 @@ public class AuditLogReportComposer {
         }
     }
 
-    private void createAuditLogSheetTitleRow(Sheet sheet, Map<String, CellStyle> styles) {
+    private void createSheetTitleRow(Sheet sheet, Map<String, CellStyle> styles) {
         Row titleRow = sheet.createRow(0);
         titleRow.setHeightInPoints(45);
         Cell titleCell = titleRow.createCell(0);
@@ -109,7 +112,7 @@ public class AuditLogReportComposer {
     }
 
 
-    private void createAuditLogHeaderRow(Sheet sheet, Map<String, CellStyle> styles) {
+    private void createSheetHeaderRow(Sheet sheet, Map<String, CellStyle> styles) {
         Row headerRow = sheet.createRow(1);
         headerRow.setHeightInPoints(40);
         List<String> headers = Arrays.asList(FILE_HEADER_MAPPING);
