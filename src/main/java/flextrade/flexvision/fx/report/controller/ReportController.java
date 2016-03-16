@@ -1,6 +1,7 @@
 package flextrade.flexvision.fx.report.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import flextrade.flexvision.fx.report.task.AuditLogReportTask;
 public class ReportController {
 
     @Autowired
+    @Qualifier(value = "maxxAsyncTaskExecutor")
     private AsyncTaskExecutor asyncTaskExecutor;
 
     @Autowired

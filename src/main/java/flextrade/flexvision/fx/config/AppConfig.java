@@ -1,5 +1,6 @@
 package flextrade.flexvision.fx.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,11 +18,13 @@ import flextrade.flexvision.fx.base.feature.impl.CachedFeatureServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
-@Import(value = {DatabaseConfig.class, SchedulerConfig.class})
+@Import(value = {DatabaseConfig.class, SchedulerConfig.class, WebConfig.class})
 @EnableTransactionManagement
 @Slf4j
 public class AppConfig {
+
     @Bean
+    @Qualifier(value = "maxxAsyncTaskExecutor")
     public AsyncTaskExecutor createAsyncTaskExecutor() {
         ThreadPoolTaskExecutor asyncTaskExecutor = new ThreadPoolTaskExecutor();
         asyncTaskExecutor.setDaemon(true);
